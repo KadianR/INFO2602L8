@@ -16,12 +16,25 @@ async function signup(event){
   //send data to application server
   let result = await sendRequest(`${server}/signup`, 'POST', data);
   
-  if('error' in result){
-    toast("Loggin Failed: "+result['error']);//show error message
+  if('detail' in result){
+    toast("Register Failed: "+result['detail']);//show error message
   }else{
-    toast("Logged Successful");
+    toast("Register Successful");
     window.location.href= 'index.html';//redirect the page
   }
 }
 
-document.forms['signUpForm'].addEventListener('submit', signup);
+function bindSignupForm() {
+  const signupForm = document.forms['signUpForm'] || document.querySelector('#signUpForm');
+  if (!signupForm) {
+    console.error('Signup form not found');
+    return;
+  }
+  signupForm.addEventListener('submit', signup);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bindSignupForm);
+} else {
+  bindSignupForm();
+}
